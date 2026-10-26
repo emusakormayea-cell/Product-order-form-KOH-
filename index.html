@@ -89,6 +89,26 @@
       const quantity = document.getElementById('quantity').value;
       const orderType = document.getElementById('orderType').value;
       const total = calculateTotal();
+
+        // Send order data to Google Apps Script Web App
+  fetch("https://script.google.com/macros/s/AKfycbwPPYb5FKdLjbJupPHgRDcYmNYlRpwSkoXf9rIm7H6hgu7n8A_Ux0_arlJhFh1s1hV5/exec", {
+    method: "POST",
+    body: JSON.stringify({
+      name: name,
+      phone: phone,
+      size: size,
+      quantity: quantity,
+      orderType: orderType,
+      total: total
+    })
+  })
+  .then(res => res.text())
+  .then(text => {
+    console.log("Response from Google Apps Script:", text);
+  })
+  .catch(err => {
+    console.error("Error sending order:", err);
+  });
       
       let message = `Thank you, ${name}! Your order for ${quantity} ${size} jar(s) is received. `;
       if (orderType === 'pickup') {
