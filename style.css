@@ -1,0 +1,48 @@
+:root {
+  --primary: #d4a017;   /* honey gold */
+  --secondary: #5a3e1b; /* deep brown */
+  --background: #fff8e7; /* soft cream */
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: var(--background);
+  color: var(--secondary);
+  margin: 20px;
+}
+
+h1 {
+  color: var(--primary);
+}
+
+form {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  border: 2px solid var(--primary);
+  max-width: 400px;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid var(--secondary);
+  border-radius: 4px;
+}
+
+button {
+  background: var(--primary);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--secondary);
+}
