@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Form</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    label { display: block; margin-top: 10px; }
+    .total { font-weight: bold; margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <h1>Honey Jar Order Form</h1>
+  
+  <form id="orderForm">
+    <label>
+      Customer Name:
+      <input type="text" id="name" required>
+    </label>
+    
+    <label>
+      Phone Number:
+      <input type="tel" id="phone" required>
+    </label>
+    
+    <label>
+      Product Size:
+      <select id="size" required>
+        <option value="small">Small Jar (GMD 100)</option>
+        <option value="large">Large Jar (GMD 180)</option>
+      </select>
+    </label>
+    
+    <label>
+      Quantity:
+      <input type="number" id="quantity" min="1" value="1" required>
+    </label>
+    
+    <label>
+      Order Type:
+      <select id="orderType" required>
+        <option value="pickup">Pickup</option>
+        <option value="delivery">Delivery</option>
+      </select>
+    </label>
+    
+    <div id="rules"></div>
+    
+    <div class="total" id="totalAmount">Total: GMD 0</div>
+    
+    <button type="submit">Submit Order</button>
+  </form>
+  
+  <div id="confirmation"></div>
+  
+  <script>
+    const prices = { small: 100, large: 180 };
+    const deliveryFee = 50;
+    
+    function calculateTotal() {
+      const size = document.getElementById('size').value;
+      const quantity = parseInt(document.getElementById('quantity').value) || 0;
+      const orderType = document.getElementById('orderType').value;
+      
+      let total = quantity * prices[size];
+      if (orderType === 'delivery') total += deliveryFee;
+      
+      document.getElementById('totalAmount').textContent = "Total: GMD " + total;
+      return total;
+    }
+    
+    document.getElementById('size').addEventListener('change', calculateTotal);
+    document.getElementById('quantity').addEventListener('input', calculateTotal);
+    document.getElementById('orderType').addEventListener('change', () => {
+      calculateTotal();
+      const rulesDiv = document.getElementById('rules');
+      if (document.getElementById('orderType').value === 'pickup') {
+        rulesDiv.textContent = "Pickup available 10 AM – 2 PM.";
+      } else {
+        rulesDiv.textContent = "Delivery must be scheduled the day before, available until 4 PM.";
+      }
+    });
+    
+    document.getElementById('orderForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const phone = document.getElementById('phone').value;
+      const size = document.getElementById('size').value;
+      const quantity = document.getElementById('quantity').value;
+      const orderType = document.getElementById('orderType').value;
+      const total = calculateTotal();
+      
+      let message = `Thank you, ${name}! Your order for ${quantity} ${size} jar(s) is received. `;
+      if (orderType === 'pickup') {
+        message += "Pickup between 10 AM – 2 PM.";
+      } else {
+        message += "Delivery scheduled tomorrow before 4 PM.";
+      }
+      message += ` Total cost: GMD ${total}.`;
+      
+      document.getElementById('confirmation').textContent = message;
+    });
+    
+    calculateTotal(); // initialize
+  </script>
+</body>
+</html>
