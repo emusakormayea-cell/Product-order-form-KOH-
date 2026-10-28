@@ -50,7 +50,7 @@
   <div id="confirmation"></div>
   
   <script>
-    const prices = { 350ml: 350, 1Litre: 850 };
+    const prices = { small: 350, large: 850 };
     const deliveryFee = 50;
     
     function calculateTotal() {
@@ -86,8 +86,8 @@
       const orderType = document.getElementById('orderType').value;
       const total = calculateTotal();
 
-        // Send order data to Google Apps Script Web App
-  fetch("https://script.google.com/macros/s/AKfycbxUt2iI09hBHCUdrew9YmiPvLUKtir1TvLe3y9qQeEHFbe17gtFkMNBaJN-L03QgJQx/exec", {
+    // 🔗 Send order data to Google Apps Script Web App
+  fetch("https://script.google.com/macros/s/AKfycbxxlc84Ef8QgCuJF41HGD4f7gztC_uCbOvIihfQhvlRQPzzDlQufCgPwPTwi90Zck5t/exec", {
     method: "POST",
     body: JSON.stringify({
       name: name,
@@ -98,24 +98,38 @@
       total: total
     })
   })
-  .then(res => res.text())
-  .then(text => {
-    console.log("Response from Google Apps Script:", text);
+
+      // 3. Show confirmation message (AFTER fetch succeeds)
+    let message = `Thank you, ${name}! Your order for ${quantity} ${size} jar(s) is received. `;
+    message += (orderType === 'pickup')
+      ? "Pickup between 4 PM – 7 PM on Mon, Tue, Thu & Fri; 10 AM – 3 PM on Sat."
+      : "Delivery scheduled tomorrow before 7 PM.";
+    message += ` Total cost: GMD ${total}.`;
+
+    document.getElementById('confirmation').textContent = message;
   })
   .catch(err => {
     console.error("Error sending order:", err);
+    document.getElementById('confirmation').textContent =
+      "Error submitting order. Please try again.";
   });
-      
-      let message = `Thank you, ${name}! Your order for ${quantity} ${size} jar(s) is received. `;
-      if (orderType === 'pickup') {
-        message += "Pickup between 10 AM – 2 PM.";
-      } else {
-        message += "Delivery scheduled tomorrow before 4 PM.";
-      }
-      message += ` Total cost: GMD ${total}.`;
-      
-      document.getElementById('confirmation').textContent = message;
-    });
+
+  .then(res => res.text())
+  .then(text => {
+    console.log("Response from Google Apps Script:", text);
+    document.getElementById('confirmation').textContent =
+      `Thank you, ${name}! Your order for ${quantity} ${size} jar(s) is received. ` +
+      (orderType === 'pickup'
+        ? "Pickup between 4 PM – 7 PM on Mon, Tue, Thu & Fri; 10 AM – 3 PM on Sat."
+        : "Delivery scheduled tomorrow before 7 PM.") +
+      ` Total cost: GMD ${total}.`;
+  })
+  .catch(err => {
+    console.error("Error sending order:", err);
+    document.getElementById('confirmation').textContent =
+      "Error submitting order. Please try again.";
+  });
+});
     
     calculateTotal(); // initialize
   </script>
